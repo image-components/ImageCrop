@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>index</title>
+<script type="text/javascript" src="ImageView.js"></script>
+<link rel="stylesheet" type="text/css" href="ImageView.css">
+<head>
+	<body>
+		<div>
+			<div class="rel origin ma" id="source"></div>
+			<div class="prev rel fl"><img class="img abs" id="prevImg" src=""></div>
+            <div class="area rel fl ml10"><img class="img abs" id="areaImg" src=""></div>
+		</div>
+        <script type="text/javascript">
+        function $(id) {
+            return document.getElementById(id)
+        }
+        new ImageView({
+            sourceContainer: $('source'),
+            imgCls: 'img maxImg',
+            preImg: $('prevImg'),
+            areaImg: $('areaImg'),
+            src: '1.jpg'
+        })
+        </script>
+	</body>
+</html>
