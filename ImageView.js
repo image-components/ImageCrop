@@ -40,7 +40,7 @@
         },
         unbind = w3c ? function(ele, name, func, bubble) {
             ele.removeEventListener(name, func, !!bubble)
-        } : function() {
+        } : function(ele, name, func) {
             ele.detachEvent('on' + name, func)
         };
 
