@@ -46,3 +46,5 @@ var info1 = imgCrop.getAreaInfo(); // 移动框所包含的的图片相关信息
  */
 这种形式.
 </pre>
+<p>兼容性：</p>
+<i>IE6+，其他浏览器</i>
