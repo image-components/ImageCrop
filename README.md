@@ -1,4 +1,4 @@
-ImageView2
+ImageCrop2
 ==========
 
 图片裁剪、预览 兼容版
