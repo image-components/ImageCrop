@@ -19,9 +19,16 @@ var imgCrop = new ImageCrop({
     defaultCenter: false, // 可选，是否默认出现在中心位置，默认true
     top: 10, // 可选，默认出现位置的top值（当defaultCenter为false时有效），默认0
     left:10, // 可选，默认出现位置的left值（当defaultCenter为false时有效），默认0
-
+	
     minHeight: 10, // 可选，移动框的最小高度，默认20
-    minWidth: 10 // 可选，移动框的最小宽度，默认20
+    minWidth: 10, // 可选，移动框的最小宽度，默认20
+	
+	// 当移动的时候调用
+	// 移动的概念是指 选择框的大小、位置 发生改变的时候
+    onMove: function() {
+		console.log(this.getPreInfo())
+		console.log(this.getAreaInfo())
+	}
 });
 </pre>
 <p>api部分：</p>

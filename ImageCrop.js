@@ -392,6 +392,7 @@
                 style.top = Math.round(-top) + 'px';
                 style.left = Math.round(-left) + 'px';
             }
+            if (this.options.onMove) this.options.onMove.call(this);
         },
 
         onResize: function(w, h) {
@@ -431,8 +432,8 @@
             var ret;
             if (this.preImg) {
                 ret = {
-                    top: parseInt(-this.preImg.style.top),
-                    left:  parseInt(-this.preImg.style.left),
+                    top: -parseInt(this.preImg.style.top),
+                    left:  -parseInt(this.preImg.style.left),
                     width: this.preImg.width,
                     height: this.preImg.height
                 };
@@ -444,6 +445,7 @@
          * 得到裁剪区域位置
          */
         getAreaInfo: function() {
+            if (!this.dragMove) return {};
             return {
                 top: this.dragMove.pTop,
                 left: this.dragMove.pLeft,
