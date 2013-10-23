@@ -471,19 +471,19 @@
 
     function createBs() {
         return (
-            '<i style="position:absolute;top:-5px;left:-5px;cursor:nw-resize;width:8px;_font-size:0;height:8px;border:1px solid #111;background-color:#fff;z-index:5;" data-xy="-1,-1"></i>' +
-            '<i style="position:absolute;top:-5px;left:50%;margin-left:-5px;cursor:n-resize;width:8px;_font-size:0;height:8px;border:1px solid #111;background-color:#fff;z-index:5;" data-xy="0,-1"></i>' +
-            '<i style="position:absolute;top:-5px;right:-5px;cursor:sw-resize;width:8px;_font-size:0;height:8px;border:1px solid #111;background-color:#fff;z-index:5;" data-xy="1,-1"></i>' +
-            '<i style="position:absolute;top:50%;left:-5px;margin-top:-5px;cursor:e-resize;;width:8px;_font-size:0;height:8px;border:1px solid #111;background-color:#fff;z-index:5;" data-xy="-1,0"></i>' +
-            '<i style="position:absolute;top:50%;right:-5px;margin-top:-5px;cursor:e-resize;width:8px;_font-size:0;height:8px;border:1px solid #111;background-color:#fff;z-index:5;" data-xy="1,0"></i>' +
-            '<i style="position:absolute;bottom:-5px;left:-5px;cursor:sw-resize;width:8px;_font-size:0;height:8px;border:1px solid #111;background-color:#fff;z-index:5;" data-xy="-1,1"></i>' +
-            '<i style="position:absolute;bottom:-5px;left:50%;margin-left:-5px;cursor:n-resize;width:8px;_font-size:0;height:8px;border:1px solid #111;background-color:#fff;z-index:5;" data-xy="0,1"></i>' +
-            '<i style="position:absolute;bottom:-5px;right:-5px;cursor:nw-resize;width:8px;_font-size:0;height:8px;border:1px solid #111;background-color:#fff;z-index:5;" data-xy="1,1"></i>' +
+            '<i style="position:absolute;top:0;left:0;cursor:nw-resize;width:5px;_font-size:0;height:5px;border:1px solid #111;background-color:#fff;z-index:5;" data-xy="-1,-1"></i>' +
+            '<i style="position:absolute;top:0;left:50%;margin-left:-2.5px;cursor:n-resize;width:5px;_font-size:0;height:5px;border:1px solid #111;background-color:#fff;z-index:5;" data-xy="0,-1"></i>' +
+            '<i style="position:absolute;top:0;right:-0;cursor:sw-resize;width:5px;_font-size:0;height:5px;border:1px solid #111;background-color:#fff;z-index:5;" data-xy="1,-1"></i>' +
+            '<i style="position:absolute;top:50%;left:0;margin-top:-2.5px;cursor:e-resize;;width:5px;_font-size:0;height:5px;border:1px solid #111;background-color:#fff;z-index:5;" data-xy="-1,0"></i>' +
+            '<i style="position:absolute;top:50%;right:0;margin-top:-2.5px;cursor:e-resize;width:5px;_font-size:0;height:5px;border:1px solid #111;background-color:#fff;z-index:5;" data-xy="1,0"></i>' +
+            '<i style="position:absolute;bottom:0;left:0;cursor:sw-resize;width:5px;_font-size:0;height:5px;border:1px solid #111;background-color:#fff;z-index:5;" data-xy="-1,1"></i>' +
+            '<i style="position:absolute;bottom:0;left:50%;margin-left:-2.5px;cursor:n-resize;width:5px;_font-size:0;height:5px;border:1px solid #111;background-color:#fff;z-index:5;" data-xy="0,1"></i>' +
+            '<i style="position:absolute;bottom:0;right:0;cursor:nw-resize;width:5px;_font-size:0;height:5px;border:1px solid #111;background-color:#fff;z-index:5;" data-xy="1,1"></i>' +
 
-            '<i style="position:absolute;top:-5px;left:-5px;background-color:transparent;cursor:n-resize;width:100%;_font-size:0;height:10px;" data-xy="0,-1"></i>' +
-            '<i style="position:absolute;top:-5px;right:-5px;background-color:transparent;cursor:e-resize;width:10px;_font-size:0;height:100%;" data-xy="1,0"></i>' +
-            '<i style="position:absolute;bottom:-5px;left:-5px;background-color:transparent;cursor:n-resize;width:100%;_font-size:0;height:10px;" data-xy="0,1"></i>' +
-            '<i style="position:absolute;top:-5px;left:-5px;background-color:transparent;cursor:e-resize;width:10px;_font-size:0;height:100%;" data-xy="-1,0"></i>'
+            '<i style="position:absolute;top:0;left:0;background-color:transparent;cursor:n-resize;width:100%;_font-size:0;height:6px;" data-xy="0,-1"></i>' +
+            '<i style="position:absolute;top:0;right:0;background-color:transparent;cursor:e-resize;width:6px;_font-size:0;height:100%;" data-xy="1,0"></i>' +
+            '<i style="position:absolute;bottom:0;left:0;background-color:transparent;cursor:n-resize;width:100%;_font-size:0;height:6px;" data-xy="0,1"></i>' +
+            '<i style="position:absolute;top:0;left:0;background-color:transparent;cursor:e-resize;width:6px;_font-size:0;height:100%;" data-xy="-1,0"></i>'
         );
     }
 
