@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <title>index</title>
-<script type="text/javascript" src="ImageView.js"></script>
-<link rel="stylesheet" type="text/css" href="ImageView.css">
+<script type="text/javascript" src="ImageCrop.js"></script>
+<link rel="stylesheet" type="text/css" href="ImageCrop.css">
 <head>
 	<body>
 		<div>
@@ -16,12 +16,13 @@
         function $(id) {
             return document.getElementById(id)
         }
-        new ImageView({
+        new ImageCrop({
             sourceContainer: $('source'),
             imgCls: 'img maxImg',
             preImg: $('prevImg'),
             areaImg: $('areaImg'),
-            src: '1.jpg'
+            src: '1.jpg',
+            lockWHScale: true
         })
         </script>
 	</body>

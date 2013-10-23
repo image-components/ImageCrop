@@ -93,6 +93,7 @@
         this.onResize = options.onResize;
         this.minWidth = options.minWidth || 20;
         this.minHeight = options.minHeight || 20;
+        this.lockWHScale = options.lockWHScale;
         this.bindEvts();
     }
     DragMove.prototype = {
@@ -143,6 +144,8 @@
             } else if (pTop < this.areaMax.minTop) {
                 pTop = this.areaMax.minTop;
             }
+            pLeft = Math.round(pLeft);
+            pTop = Math.round(pTop);
             eleStyle.top = pTop + 'px';
             eleStyle.left = pLeft + 'px';
             this.pTop = pTop;
@@ -160,6 +163,16 @@
             var Y = xy[1] - 0;
             var diffX = (x - this.startPos.x) * X;
             var diffY = (y - this.startPos.y) * Y;
+             if (this.lockWHScale) {
+                var dx = Math.abs(diffX), 
+                    dy = Math.abs(diffY);
+                if ((Y > 0 || Y < 0) && X === 0) {
+                    diffX = diffY = (diffY >= 0 ? dy : -dy);
+                } else {
+                    // 目前优先 X
+                    diffX = diffY = (diffX >= 0 ? dx : -dx);
+                }
+            }
             var pW = this.initWH.w;
             var pH = this.initWH.h;
             var pLeft = this.initPos.left;
@@ -176,8 +189,8 @@
 
             var disLeft = false, disTop = false,
                 disW = false, disH = false;
-            
-            if (pLeft > this.areaMax.maxLeft) {
+
+            if (pLeft > (this.Max.w - this.minWidth)) {
                 pW += (pLeft - this.areaMax.maxLeft);
                 pLeft = this.areaMax.maxLeft;
                 disLeft = true;
@@ -186,7 +199,7 @@
                 pLeft = this.areaMax.minLeft;
                 disLeft = true;
             }
-            if (pTop > this.areaMax.maxTop) {
+            if (pTop > (this.Max.h - this.minHeight)) {
                 pH += (pTop - this.areaMax.maxTop);
                 pTop = this.areaMax.maxTop;
                 disTop = true;
@@ -196,7 +209,6 @@
                 disTop = true;
             }
             if (pW + pLeft > this.Max.w) {
-                // pLeft += (pW + pLeft -this.Max.w);
                 pW = this.Max.w - pLeft;
                 disW = true;
             } else if (pW < this.minWidth) {
@@ -208,17 +220,46 @@
                 pW = this.minWidth;
             }
             if (pH + pTop > this.Max.h) {
-                // pTop += (pH + pTop -this.Max.h);
                 pH = this.Max.h - pTop;
                 disH = true;
             } else if (pH < this.minHeight) {
                 if (Y < 0) {
                     pTop += (pH - this.minHeight);
                 } else {
-                    disW = true;
+                    disH = true;
                 } 
                 pH = this.minHeight;
             }
+            if (this.lockWHScale) {
+                var pw = pW, ph = pH;
+                if ((pW === this.pW && pH !== this.pH)) {
+                    console.log(1)
+                    pH = pW * this.initWH.h / this.initWH.w;
+                    if (Y < 0) {
+                        pTop -= (pH - ph);
+                    }
+                } else if ((pH === this.pH && pW !== this.pW)) {
+                    console.log(2);
+                    pW = pH * this.initWH.w / this.initWH.h;
+                    if (X < 0) {
+                        pLeft -= (pW - pw);
+                    }
+                } else if (disW && disH) {
+                    console.log(3)
+                    if (ph === this.pH) {
+                        pW = this.pW;
+                    }
+                    if (pw === this.pW) {
+                        pH = pw * this.initWH.h / this.initWH.w;
+                    }
+                } else {
+                    console.log(4)
+                }
+            }
+            pLeft = Math.round(pLeft);
+            pTop = Math.round(pTop);
+            pW = Math.round(pW);
+            pH = Math.round(pH);
             if (!disW) {
                 eleStyle.left = pLeft + 'px';
                 this.pLeft = pLeft;
@@ -231,10 +272,10 @@
             this.pW = pW;
             eleStyle.height = pH + 'px';
             this.pH = pH;
-            this.onMove(this.pTop, this.pLeft);
             if (!disLeft || !disTop) {
                 this.onResize(this.pW, this.pH);
             }
+            this.onMove(this.pTop, this.pLeft);
         },
 
         mouseup: function(e) {
@@ -249,8 +290,8 @@
         }
     }
 
-    window.ImageView = ImageView;
-    function ImageView(options) {
+    window.ImageCrop = ImageCrop;
+    function ImageCrop(options) {
         this.sourceContainer = options.sourceContainer;
         this.sourceContainer.style.position = 'relative';
         this.sourceImg = new Image();
@@ -271,6 +312,8 @@
             h: 1
         };
         this.options = options;
+        if (!this.options.minHeight) {this.options.minHeight = 20}
+        if (!this.options.minWidth) {this.options.minWidth = 20}
         var that = this;
         this.sourceImg.onload = function() {
             setTimeout(function() {
@@ -282,8 +325,8 @@
         this.areaImg && (this.areaImg.src = options.src);
     }
 
-    ImageView.prototype = {
-        constructor: ImageView,
+    ImageCrop.prototype = {
+        constructor: ImageCrop,
 
         init: function() {
             // 在ie下 width值是图片默认图片大小
@@ -311,20 +354,21 @@
                 minHeight: this.options.minHeight
             }, {
                 onMove: this.onMove.bind(this),
-                onResize: this.onResize.bind(this)
+                onResize: this.onResize.bind(this),
+                lockWHScale: this.options.lockWHScale
             });
         },
 
         onMove: function(top, left) {
             if (this.preImg) {
                 var style = this.preImg.style;
-                style.top = (-top / this.scale.h) + 'px';
-                style.left = (-left / this.scale.w) + 'px';
+                style.top = Math.round((-top / this.scale.h), 10) + 'px';
+                style.left = Math.round((-left / this.scale.w), 10) + 'px';
             }
             if (this.areaImg) {
                 style = this.areaImg.style;
-                style.top = (-top) + 'px';
-                style.left = (-left) + 'px';
+                style.top = Math.round(-top) + 'px';
+                style.left = Math.round(-left) + 'px';
             }
         },
 
@@ -337,16 +381,16 @@
         computeScale: function(w, h) {
             if (this.preContainer) {
                 var scale = this.scale;
-                scale.w = w/this.preContainer.offsetWidth;
-                scale.h = h/this.preContainer.offsetHeight;
+                scale.w = w / this.preContainer.offsetWidth;
+                scale.h = h / this.preContainer.offsetHeight;
             }
             this.resize(w, h)
         },
 
         resize: function(w, h) {
             if (this.preImg) {
-                this.preImg.width = this.cw / this.scale.w;
-                this.preImg.height = this.ch / this.scale.h;
+                this.preImg.width = Math.round(this.cw / this.scale.w);
+                this.preImg.height = Math.round(this.ch / this.scale.h);
             }
             if (this.areaImg) {
                 this.areaImg.width = this.cw;
@@ -371,19 +415,19 @@
 
     function createBs() {
         return (
-            '<i style="position:absolute;top:0;left:0;cursor:nw-resize;width:5px;_font-size:0;height:5px;border:1px solid #111;background-color:#fff;z-index:5;" data-xy="-1,-1"></i>' +
-            '<i style="position:absolute;top:0;left:50%;margin-left:-2.5px;cursor:n-resize;width:5px;_font-size:0;height:5px;border:1px solid #111;background-color:#fff;z-index:5;" data-xy="0,-1"></i>' +
-            '<i style="position:absolute;top:0;right:0;cursor:sw-resize;width:5px;_font-size:0;height:5px;border:1px solid #111;background-color:#fff;z-index:5;" data-xy="1,-1"></i>' +
-            '<i style="position:absolute;top:50%;left:0;margin-top:-2.5px;cursor:e-resize;;width:5px;_font-size:0;height:5px;border:1px solid #111;background-color:#fff;z-index:5;" data-xy="-1,0"></i>' +
-            '<i style="position:absolute;top:50%;right:0;margin-top:-2.5px;cursor:e-resize;width:5px;_font-size:0;height:5px;border:1px solid #111;background-color:#fff;z-index:5;" data-xy="1,0"></i>' +
-            '<i style="position:absolute;bottom:0;left:0;cursor:sw-resize;width:5px;_font-size:0;height:5px;border:1px solid #111;background-color:#fff;z-index:5;" data-xy="-1,1"></i>' +
-            '<i style="position:absolute;bottom:0;left:50%;margin-left:-2.5px;cursor:n-resize;width:5px;_font-size:0;height:5px;border:1px solid #111;background-color:#fff;z-index:5;" data-xy="0,1"></i>' +
-            '<i style="position:absolute;bottom:0;right:0;cursor:nw-resize;width:5px;_font-size:0;height:5px;border:1px solid #111;background-color:#fff;z-index:5;" data-xy="1,1"></i>' +
+            '<i style="position:absolute;top:-5px;left:-5px;cursor:nw-resize;width:8px;_font-size:0;height:8px;border:1px solid #111;background-color:#fff;z-index:5;" data-xy="-1,-1"></i>' +
+            '<i style="position:absolute;top:-5px;left:50%;margin-left:-5px;cursor:n-resize;width:8px;_font-size:0;height:8px;border:1px solid #111;background-color:#fff;z-index:5;" data-xy="0,-1"></i>' +
+            '<i style="position:absolute;top:-5px;right:-5px;cursor:sw-resize;width:8px;_font-size:0;height:8px;border:1px solid #111;background-color:#fff;z-index:5;" data-xy="1,-1"></i>' +
+            '<i style="position:absolute;top:50%;left:-5px;margin-top:-5px;cursor:e-resize;;width:8px;_font-size:0;height:8px;border:1px solid #111;background-color:#fff;z-index:5;" data-xy="-1,0"></i>' +
+            '<i style="position:absolute;top:50%;right:-5px;margin-top:-5px;cursor:e-resize;width:8px;_font-size:0;height:8px;border:1px solid #111;background-color:#fff;z-index:5;" data-xy="1,0"></i>' +
+            '<i style="position:absolute;bottom:-5px;left:-5px;cursor:sw-resize;width:8px;_font-size:0;height:8px;border:1px solid #111;background-color:#fff;z-index:5;" data-xy="-1,1"></i>' +
+            '<i style="position:absolute;bottom:-5px;left:50%;margin-left:-5px;cursor:n-resize;width:8px;_font-size:0;height:8px;border:1px solid #111;background-color:#fff;z-index:5;" data-xy="0,1"></i>' +
+            '<i style="position:absolute;bottom:-5px;right:-5px;cursor:nw-resize;width:8px;_font-size:0;height:8px;border:1px solid #111;background-color:#fff;z-index:5;" data-xy="1,1"></i>' +
 
-            '<i style="position:absolute;top:0;left:0;background-color:transparent;cursor:n-resize;width:100%;_font-size:0;height:8px;" data-xy="0,-1"></i>' +
-            '<i style="position:absolute;top:0;right:0;background-color:transparent;cursor:e-resize;width:8px;_font-size:0;height:100%;" data-xy="1,0"></i>' +
-            '<i style="position:absolute;bottom:0;left:0;background-color:transparent;cursor:n-resize;width:100%;_font-size:0;height:8px;" data-xy="0,1"></i>' +
-            '<i style="position:absolute;top:0;left:0;background-color:transparent;cursor:e-resize;width:8px;_font-size:0;height:100%;" data-xy="-1,0"></i>'
+            '<i style="position:absolute;top:-5px;left:-5px;background-color:transparent;cursor:n-resize;width:100%;_font-size:0;height:10px;" data-xy="0,-1"></i>' +
+            '<i style="position:absolute;top:-5px;right:-5px;background-color:transparent;cursor:e-resize;width:10px;_font-size:0;height:100%;" data-xy="1,0"></i>' +
+            '<i style="position:absolute;bottom:-5px;left:-5px;background-color:transparent;cursor:n-resize;width:100%;_font-size:0;height:10px;" data-xy="0,1"></i>' +
+            '<i style="position:absolute;top:-5px;left:-5px;background-color:transparent;cursor:e-resize;width:10px;_font-size:0;height:100%;" data-xy="-1,0"></i>'
         );
     }
 
