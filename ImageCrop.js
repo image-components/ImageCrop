@@ -231,30 +231,53 @@
                 pH = this.minHeight;
             }
             if (this.lockWHScale) {
+                console.log('WHw::'+this.initWH.w, 'WHh::'+this.initWH.h, 'pW::'+pW, 'pH::'+pH, 'this.pW::'+this.pW, 'this.pH::'+this.pH, 'disW::'+disW, 'disH::'+disH, 'disLeft::'+disLeft, 'disTop::'+disTop)
                 var pw = pW, ph = pH;
-                if ((pW === this.pW && pH !== this.pH)) {
-                    console.log(1)
-                    pH = pW * this.initWH.h / this.initWH.w;
-                    if (Y < 0) {
-                        pTop -= (pH - ph);
-                    }
-                } else if ((pH === this.pH && pW !== this.pW)) {
-                    console.log(2);
-                    pW = pH * this.initWH.w / this.initWH.h;
-                    if (X < 0) {
-                        pLeft -= (pW - pw);
-                    }
-                } else if (disW && disH) {
-                    console.log(3)
-                    if (ph === this.pH) {
-                        pW = this.pW;
-                    }
-                    if (pw === this.pW) {
-                        pH = pw * this.initWH.h / this.initWH.w;
-                    }
-                } else {
+                // if ((pW === this.pW && pH !== this.pH) && !disW && !disH) {
+                //     console.log(1)
+                //     pH = pW * this.initWH.h / this.initWH.w;
+                //     if (Y < 0) {
+                //         pTop -= (pH - ph);
+                //     }
+                // } else if ((pH === this.pH && pW !== this.pW)) {
+                //     console.log(2);
+                //     pW = pH * this.initWH.w / this.initWH.h;
+                //     if (X < 0) {
+                //         pLeft -= (pW - pw);
+                //     }
+                // }  else {
                     console.log(4)
-                }
+                    if (pW / pH > this.initWH.w / this.initWH.h) {
+                        pW = pH * this.initWH.w / this.initWH.h;
+                        if (X < 0) {
+                            pLeft -= (pW - pw);
+                        }
+                    } else if (pW / pH < this.initWH.w / this.initWH.h) {
+                        pH = pW * this.initWH.h / this.initWH.w;
+                        if (Y < 0) {
+                            pTop -= (pH - ph);
+                        }
+                    }
+                    // if (disW && !disTop) {
+                    //     pH = pW * this.initWH.h / this.initWH.w;
+                    //     if (Y < 0) {
+                    //         pTop -= (pH - ph);
+                    //     }
+                    // }
+                    // if (disTop) {
+                    //     pW = pH * this.initWH.w / this.initWH.h;
+                    //     if (X < 0) {
+                    //         pLeft -= (pW - pw);
+                    //     }
+                    // }
+                    
+                    // if (disH) {
+                    //     pW = pH * this.initWH.w / this.initWH.h;
+                    //     if (X < 0) {
+                    //         pLeft -= (pW - pw);
+                    //     }
+                    // }
+                // }
             }
             pLeft = Math.round(pLeft);
             pTop = Math.round(pTop);
