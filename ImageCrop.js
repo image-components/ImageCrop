@@ -330,6 +330,7 @@
 
         init: function() {
             // 在ie下 width值是图片默认图片大小
+            // 所以这里使用offsetWidth 而不是img.width
             var cw = this.sourceImg.offsetWidth;
             this.cw = cw;
             this.sourceContainer.style.width = cw + 'px';
@@ -399,6 +400,34 @@
                 var style = this.areaImgContainer.style;
                 style.width = w + 'px';
                 style.height = h + 'px';
+            }
+        },
+
+        /*
+         * 得到当前裁剪位置
+         */
+        getPreInfo: function() {
+            var ret;
+            if (this.preImg) {
+                ret = {
+                    top: parseInt(-this.preImg.style.top),
+                    left:  parseInt(-this.preImg.style.left),
+                    width: this.preImg.width,
+                    height: this.preImg.height
+                };
+            }
+            return ret || {};
+        },
+
+        /*
+         * 得到裁剪区域位置
+         */
+        getAreaInfo: function() {
+            return {
+                top: this.dragMove.pTop,
+                left: this.dragMove.pLeft,
+                width: this.dragMove.pW,
+                height: this.dragMove.pH
             }
         }
     }
