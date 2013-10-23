@@ -26,8 +26,8 @@ var imgCrop = new ImageCrop({
 	// 当移动的时候调用
 	// 移动的概念是指 选择框的大小、位置 发生改变的时候
     onMove: function() {
-		console.log(this.getPreInfo())
-		console.log(this.getAreaInfo())
+		console.log('preInfo::', this.getPreInfo())
+        console.log('areaInfo::', this.getAreaInfo())
 	}
 });
 </pre>
