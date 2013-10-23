@@ -1,5 +1,4 @@
 (function() {
-
     var w3c = window.dispatchEvent,
         // https://github.com/RubyLouvre/avalon/blob/master/avalon.js
         fixEvent = function(event) {
@@ -42,6 +41,26 @@
             ele.removeEventListener(name, func, !!bubble)
         } : function(ele, name, func) {
             ele.detachEvent('on' + name, func)
+        },
+        // 参照jquery实现
+        // http://code.jquery.com/jquery-1.10.2.js
+        offset = function(elem) {
+            var docElem, win,
+                box = {top: 0, left: 0},
+                doc = elem && elem.ownerDocument;
+
+            if (!doc) return;
+            docElem = doc.documentElement;
+            // If we don't have gBCR, just use 0,0 rather than error
+            // BlackBerry 5, iOS 3 (original iPhone)
+            if (typeof elem.getBoundingClientRect !== 'undefined') {
+                box = elem.getBoundingClientRect();
+            }
+            win = doc.nodeType === 9 ? doc.defaultView || doc.parentWindow : false;
+            return {
+                top: box.top  + (win.pageYOffset || docElem.scrollTop)  - (docElem.clientTop  || 0),
+                left: box.left + (win.pageXOffset || docElem.scrollLeft) - (docElem.clientLeft || 0)
+            };
         };
 
     var EVENT = {
@@ -82,8 +101,8 @@
             top: 0
         };
         this.initWH = {
-            w: this.ele.offsetWidth,
-            h: this.ele.offsetHeight
+            w: this.ele.offsetWidth || parseInt(this.ele.style.width),
+            h: this.ele.offsetHeight || parseInt(this.ele.style.height)
         };
         this.startPos = {
             x: 0,
@@ -94,6 +113,7 @@
         this.minWidth = options.minWidth || 20;
         this.minHeight = options.minHeight || 20;
         this.lockWHScale = options.lockWHScale;
+        this.pTop = this.pLeft = 0;
         this.bindEvts();
     }
     DragMove.prototype = {
@@ -130,7 +150,6 @@
             var y = e.pageY;
             var pLeft = this.initPos.left;
             var pTop = this.initPos.top;
-            var eleStyle = this.ele.style;
             pLeft += (x - this.startPos.x);
             pTop += (y - this.startPos.y)
             if (pLeft > this.areaMax.maxLeft) {
@@ -144,8 +163,11 @@
             } else if (pTop < this.areaMax.minTop) {
                 pTop = this.areaMax.minTop;
             }
-            pLeft = Math.round(pLeft);
-            pTop = Math.round(pTop);
+            this.moveTo(pTop, pLeft);
+        },
+
+        moveTo: function(pTop, pLeft) {
+            var eleStyle = this.ele.style;
             eleStyle.top = pTop + 'px';
             eleStyle.left = pLeft + 'px';
             this.pTop = pTop;
@@ -158,7 +180,7 @@
         handlerResize: function(e) {
             var x = e.pageX;
             var y = e.pageY;
-            var xy = this.target.getAttribute('data-xy').split(',');
+            var xy = this.target && this.target.getAttribute('data-xy').split(',') || [1, 1];
             var X = xy[0] - 0;
             var Y = xy[1] - 0;
             var diffX = (x - this.startPos.x) * X;
@@ -244,10 +266,6 @@
                     }
                 }
             }
-            pLeft = Math.round(pLeft);
-            pTop = Math.round(pTop);
-            pW = Math.round(pW);
-            pH = Math.round(pH);
             if (!disW) {
                 eleStyle.left = pLeft + 'px';
                 this.pLeft = pLeft;
@@ -267,7 +285,7 @@
         },
 
         mouseup: function(e) {
-            EVENT.stop(e);
+            e && EVENT.stop(e);
             this.mousedDown = false;
             this.startPos.x = 0;
             this.startPos.y= 0;
@@ -286,7 +304,6 @@
         this.sourceImg.className = options.imgCls || 'img';
         this.sourceContainer.appendChild(this.sourceImg);
         this.card = getCard(options);
-        this.sourceContainer.appendChild(this.card);
         if (options.preImg) {
             this.preContainer = options.preImg.parentElement;
             this.preImg = options.preImg;
@@ -295,13 +312,11 @@
             this.areaImgContainer = options.areaImg.parentElement;
             this.areaImg = options.areaImg;
         }
-        this.scale = {
-            w: 1,
-            h: 1
-        };
+        this.scale = {w: 1, h: 1};
         this.options = options;
         if (!this.options.minHeight) {this.options.minHeight = 20}
         if (!this.options.minWidth) {this.options.minWidth = 20}
+        if (typeof this.options.defaultCenter == 'undefined')  this.options.defaultCenter = true;
         var that = this;
         this.sourceImg.onload = function() {
             setTimeout(function() {
@@ -328,20 +343,38 @@
             this.cardMax = {
                 minTop: 0,
                 minLeft: 0,
-                maxTop: ch - this.card.offsetHeight,
-                maxLeft: cw - this.card.offsetWidth
+                maxTop: ch - this.options.height,
+                maxLeft: cw - this.options.width
             };
+            var mt = this.cardMax.maxTop,
+                ml = this.cardMax.maxLeft,
+                offs = offset(this.sourceImg),
+                dS = {pageX: 0, pageY: 0};
+            if (mt < 0) this.cardMax.maxTop = 0;
+            if (ml < 0) this.cardMax.maxLeft = 0;
             this.bindEvts();
-            this.computeScale(this.dragMove.initWH.w, this.dragMove.initWH.h);
+            if (mt < 0 || ml < 0) {
+                dS.pageX = (offs.left + cw) * 2;
+                dS.pageY = (offs.top + ch) * 2;
+            }
+            this.dragMove.initPos.left = this.options.left;
+            this.dragMove.initPos.top = this.options.top;
+            this.dragMove.handlerResize(dS);
+            this.sourceContainer.appendChild(this.card);
+            if (this.options.defaultCenter) {
+                // 是否默认显示在中心
+                this.dragMove.moveTo(ch / 2 - this.dragMove.pH / 2, cw / 2 - this.dragMove.pW / 2);
+            }
+            this.dragMove.mouseup();
         },
 
         bindEvts: function() {
             this.dragMove = new DragMove(this.card, this.cardMax, {
                 w: this.cw,
-                h: this.ch,
-                minWidth: this.options.minWidth,
-                minHeight: this.options.minHeight
+                h: this.ch
             }, {
+                minWidth: this.options.minWidth,
+                minHeight: this.options.minHeight,
                 onMove: this.onMove.bind(this),
                 onResize: this.onResize.bind(this),
                 lockWHScale: this.options.lockWHScale
@@ -423,9 +456,13 @@
     function getCard(options) {
         var div = document.createElement('div');
         div.setAttribute('data-card', true);
-        div.style.cssText = 'position:absolute;top:' + (options.top || 0) + 'px;left:' + (options.left || 0) +
+        options.top || (options.top = 0);
+        options.left || (options.left = 0);
+        options.width || (options.width = 100);
+        options.height || (options.height = 100);
+        div.style.cssText = 'position:absolute;top:' + options.top + 'px;left:' + options.left +
             'px;cursor:move;box-sizing:border-box;border:1px dashed #fff;opacity:.5;filter:alpha(opacity=50);background-color:#000;' +
-            'z-index:5;width:' + (options.width || 100) + 'px;height:' + (options.height || 100) + 'px;';
+            'z-index:5;width:' + options.width + 'px;height:' + options.height + 'px;';
         div.innerHTML = createBs();
         return div;
     }
