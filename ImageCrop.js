@@ -253,7 +253,7 @@
                 pH = this.minHeight;
             }
             if (this.lockWHScale) {
-                var wp = pW / pH, hp = this.initWH.w / this.initWH.h;
+                var pw = pW, ph = pH, wp = pW / pH, hp = this.initWH.w / this.initWH.h;
                 if (wp >= hp) {
                     pW = pH * hp;
                     if (X < 0) {
