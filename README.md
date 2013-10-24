@@ -28,6 +28,7 @@ var imgCrop = new ImageCrop({
     onMove: function() {
 		console.log('preInfo::', this.getPreInfo())
         console.log('areaInfo::', this.getAreaInfo())
+        console.log('originInfo::', this.getOriginInfo())
 	}
 });
 </pre>
@@ -35,7 +36,8 @@ var imgCrop = new ImageCrop({
 <pre>
 var info = imgCrop.getPreInfo(); // 预览图片相关信息
 var info1 = imgCrop.getAreaInfo(); // 移动框所包含的的图片相关信息
-// info info1 均为
+var info2 = imgCrop.getOriginInfo(); // 得到相对于图片原始大小时位置大小信息
+// info info1 info2 均为
 /*
  {
     left: 10,

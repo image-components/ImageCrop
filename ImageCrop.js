@@ -301,8 +301,6 @@
         this.sourceContainer = options.sourceContainer;
         this.sourceContainer.style.position = 'relative';
         this.sourceImg = new Image();
-        this.sourceImg.className = options.imgCls || 'img';
-        this.sourceContainer.appendChild(this.sourceImg);
         this.card = getCard(options);
         if (options.preImg) {
             this.preContainer = options.preImg.parentElement;
@@ -319,6 +317,10 @@
         if (typeof this.options.defaultCenter == 'undefined')  this.options.defaultCenter = true;
         var that = this;
         this.sourceImg.onload = function() {
+            that.originWidth = that.sourceImg.width;
+            that.originHeight = that.sourceImg.height;
+            that.sourceImg.className = options.imgCls || 'img';
+            that.sourceContainer.appendChild(that.sourceImg);
             setTimeout(function() {
                 that.init()
             })
@@ -451,6 +453,20 @@
                 left: this.dragMove.pLeft,
                 width: this.dragMove.pW,
                 height: this.dragMove.pH
+            }
+        },
+
+        /*
+         * 得到相对于图片原始大小时位置
+         */
+        getOriginInfo: function() {
+            if (!this.dragMove) return {};
+            var scaleX = this.originWidth / this.cw, scaleY = this.originHeight / this.ch;
+            return {
+                top: Math.round(this.dragMove.pTop * scaleY),
+                left: Math.round(this.dragMove.pLeft * scaleX),
+                width: Math.round(this.dragMove.pW * scaleX),
+                height: Math.round(this.dragMove.pH * scaleY)
             }
         }
     }
