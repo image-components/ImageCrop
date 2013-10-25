@@ -287,10 +287,6 @@
 
         mouseup: function(e) {
             e && EVENT.stop(e);
-            EVENT.off(DOC, 'mousemove', this._mousemove);
-            EVENT.off(DOC, 'mouseup', this._mouseup);
-            this._mousemove = null;
-            this._mouseup = null;
             this.mousedDown = false;
             this.startPos.x = 0;
             this.startPos.y= 0;
@@ -298,6 +294,10 @@
             this.initWH.h = this.pH;
             this.initPos.left = this.pLeft;
             this.initPos.top = this.pTop;
+            EVENT.off(DOC, 'mousemove', this._mousemove);
+            EVENT.off(DOC, 'mouseup', this._mouseup);
+            this._mousemove = null;
+            this._mouseup = null;
         }
     }
 
