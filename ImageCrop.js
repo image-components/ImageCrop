@@ -1,11 +1,11 @@
-(function() {
+(function(DOC) {
     var w3c = window.dispatchEvent,
         // https://github.com/RubyLouvre/avalon/blob/master/avalon.js
         fixEvent = function(event) {
             var target = event.target = event.srcElement;
             event.which = event.charCode != null ? event.charCode : event.keyCode;
             if (/mouse|click/.test(event.type)) {
-                var doc = target.ownerDocument || document
+                var doc = target.ownerDocument || DOC
                 var box = doc.compatMode === "BackCompat" ? doc.body : doc.documentElement
                 event.pageX = event.clientX + (box.scrollLeft >> 0) - (box.clientLeft >> 0)
                 event.pageY = event.clientY + (box.scrollTop >> 0) - (box.clientTop >> 0)
@@ -65,7 +65,7 @@
 
     var EVENT = {
         on: function(ele, name, func, bubble) {
-            bind(ele, name, func, bubble)
+            return bind(ele, name, func, bubble)
         },
 
         off: function(ele, name, func) {
@@ -121,13 +121,14 @@
 
         bindEvts: function() {
             EVENT.on(this.ele, 'mousedown', this.mousedown.bind(this));
-            EVENT.on(document, 'mousemove', this.mousemove.bind(this));
-            EVENT.on(document, 'mouseup', this.mouseup.bind(this));
+            
         },
 
         mousedown: function(e) {
+            this._mousemove = EVENT.on(DOC, 'mousemove', this.mousemove.bind(this));
+            this._mouseup = EVENT.on(DOC, 'mouseup', this.mouseup.bind(this));
             EVENT.stop(e);
-            this.mousedDown = true;
+            this.mousedDown = true;  
             this.target = e.target;
             this.startPos.x = e.pageX;
             this.startPos.y= e.pageY;
@@ -286,6 +287,10 @@
 
         mouseup: function(e) {
             e && EVENT.stop(e);
+            EVENT.off(DOC, 'mousemove', this._mousemove);
+            EVENT.off(DOC, 'mouseup', this._mouseup);
+            this._mousemove = null;
+            this._mouseup = null;
             this.mousedDown = false;
             this.startPos.x = 0;
             this.startPos.y= 0;
@@ -503,4 +508,4 @@
         );
     }
 
-})();
+})(document);
