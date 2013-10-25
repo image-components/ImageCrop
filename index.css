@@ -13,31 +13,6 @@
 .origin {user-select:none;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;}
 .view {top:0;left:0;z-index:5;}
 .inb {display:inline-block;vertical-align:middle;}
-.opy5 {opacity:.5;filter:alpha(opacity=50);background-color:#000;}
-
-.ps {width:5px;height:5px;border:1px solid #111;background-color:#fff;z-index:5;}
-.ps1, .ps4, .ps6 {left:0;}
-.ps2, .ps7 {left:50%;margin-left:-2.5px;}
-.ps3, .ps5, .ps8 {right:0;}
-.ps1, .ps2, .ps3 {top:0;}
-.ps4, .ps5 {top:50%;margin-top:-2.5px;}
-.ps6, .ps7, .ps8 {bottom:-1px;}
-.ps1, .ps8 {cursor:nw-resize;}
-.ps2, .ps7 {cursor:n-resize;}
-.ps3, .ps6 {cursor:sw-resize;}
-.ps4, .ps5 {cursor:e-resize;}
-
-.bt {background-color:transparent;}
-.bt1, .bt3 {cursor:n-resize;width:100%;height:8px;}
-.bt2, .bt4 {cursor:e-resize;width:8px;height:100%;}
-.bt1 {top:0;left:0;}
-.bt2 {top:0;right:0;}
-.bt3 {bottom: 0;left:0}
-.bt4 {left:0;top:0;}
-
-.b1 {border:1px dashed #fff;}
-
-.full {cursor:move;box-sizing:border-box;}
 
 .prev {width:150px;height:150px;overflow:hidden;}
 .prev1 {width:200px;height:200px;}
