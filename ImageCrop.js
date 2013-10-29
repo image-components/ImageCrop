@@ -68,7 +68,7 @@
             return bind(ele, name, func, bubble)
         },
 
-        off: function(ele, name, func) {
+        off: function(ele, name, func, bubble) {
             unbind(ele, name, func, bubble)
         },
 
@@ -120,8 +120,7 @@
         constructor: DragMove,
 
         bindEvts: function() {
-            EVENT.on(this.ele, 'mousedown', this.mousedown.bind(this));
-            
+            this._mousedown = EVENT.on(this.ele, 'mousedown', this.mousedown.bind(this));
         },
 
         mousedown: function(e) {
@@ -298,6 +297,11 @@
             EVENT.off(DOC, 'mouseup', this._mouseup);
             this._mousemove = null;
             this._mouseup = null;
+        },
+
+        destroy: function() {
+            EVENT.off(this.ele, 'mousedown', this._mousedown);
+            this.ele = null;
         }
     }
 
@@ -305,8 +309,6 @@
     function ImageCrop(options) {
         this.sourceContainer = options.sourceContainer;
         this.sourceContainer.style.position = 'relative';
-        this.sourceImg = new Image();
-        this.card = getCard(options);
         if (options.preImg) {
             this.preContainer = options.preImg.parentElement;
             this.preImg = options.preImg;
@@ -315,28 +317,46 @@
             this.areaImgContainer = options.areaImg.parentElement;
             this.areaImg = options.areaImg;
         }
-        this.scale = {w: 1, h: 1};
         this.options = options;
         if (!this.options.minHeight) {this.options.minHeight = 20}
         if (!this.options.minWidth) {this.options.minWidth = 20}
         if (typeof this.options.defaultCenter == 'undefined')  this.options.defaultCenter = true;
-        var that = this;
-        this.sourceImg.onload = function() {
-            that.originWidth = that.sourceImg.width;
-            that.originHeight = that.sourceImg.height;
-            that.sourceImg.className = options.imgCls || 'img';
-            that.sourceContainer.appendChild(that.sourceImg);
-            setTimeout(function() {
-                that.init()
-            })
-        }
-        this.sourceImg.src = options.src;
-        this.preImg && (this.preImg.src = options.src);
-        this.areaImg && (this.areaImg.src = options.src);
+        this.initImage();
     }
 
     ImageCrop.prototype = {
+
         constructor: ImageCrop,
+
+        initImage: function() {
+            var that = this;
+            if (this.sourceImg) {
+                this.sourceImg.parentNode.removeChild(this.sourceImg);
+            }
+            if (this.card) {
+                this.sourceContainer.removeChild(this.card);
+            }
+            this.card = getCard(this.options);
+            this.scale = {w: 1, h: 1};
+            this.sourceImg = new Image();
+            this.sourceImg.onload = function() {
+                that.originWidth = that.sourceImg.width;
+                that.originHeight = that.sourceImg.height;
+                that.sourceImg.className = that.options.imgCls || 'img';
+                that.sourceContainer.appendChild(that.sourceImg);
+                setTimeout(function() {
+                    that.init()
+                })
+            }
+            this.sourceImg.src = this.options.src;
+            this.preImg && (this.preImg.src = this.options.src);
+            this.areaImg && (this.areaImg.src = this.options.src);
+        },
+
+        changeImage: function(src) {
+            this.options.src = src;
+            this.initImage();
+        },
 
         init: function() {
             // 在ie下 width值是图片默认图片大小
@@ -376,6 +396,9 @@
         },
 
         bindEvts: function() {
+            if (this.dragMove) {
+                this.dragMove.destroy();
+            }
             this.dragMove = new DragMove(this.card, this.cardMax, {
                 w: this.cw,
                 h: this.ch

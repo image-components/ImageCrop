@@ -47,6 +47,7 @@ var info2 = imgCrop.getOriginInfo(); // 得到相对于图片原始大小时位�
  }
  */
 这种形式.
+imgCrop.changeImage('2.jpg'); // 更改图片
 </pre>
 <p>兼容性：</p>
 <i>IE6+，其他浏览器</i>
