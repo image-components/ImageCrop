@@ -311,11 +311,17 @@
         this.sourceContainer.style.position = 'relative';
         if (options.preImg) {
             this.preContainer = options.preImg.parentElement;
+            this.preContainer.style.position = 'relative';
+            this.preContainer.style.overflow = 'hidden';
             this.preImg = options.preImg;
+            this.preImg.style.position = 'absolute';
         }
         if (options.areaImg) {
             this.areaImgContainer = options.areaImg.parentElement;
+            this.areaImgContainer.style.position = 'relative';
+            this.areaImgContainer.style.overflow = 'hidden';
             this.areaImg = options.areaImg;
+            this.areaImg.style.position = 'absolute';
         }
         this.options = options;
         if (!this.options.minHeight) {this.options.minHeight = 20}
