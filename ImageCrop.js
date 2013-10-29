@@ -1,4 +1,4 @@
-(function(DOC) {
+;(function(DOC) {
     var w3c = window.dispatchEvent,
         // https://github.com/RubyLouvre/avalon/blob/master/avalon.js
         fixEvent = function(event) {
@@ -508,4 +508,11 @@
         );
     }
 
+    if (typeof module === 'object' && module && typeof module.exports === 'object') {
+        module.exports = ImageCrop;
+    } else {
+        if (typeof define === 'function' && define.amd) {
+            define('ImageCrop', [], function() { return ImageCrop; });
+        }
+    }
 })(document);
