@@ -326,6 +326,8 @@
         this.options = options;
         if (!this.options.minHeight) {this.options.minHeight = 20}
         if (!this.options.minWidth) {this.options.minWidth = 20}
+        if (!this.options.minImgHeight) {this.options.minImgHeight = 150}
+        if (!this.options.minImgWidth) {this.options.minImgWidth = 150}
         if (typeof this.options.defaultCenter == 'undefined')  this.options.defaultCenter = true;
         this.initImage();
     }
@@ -368,11 +370,21 @@
             // 在ie下 width值是图片默认图片大小
             // 所以这里使用offsetWidth 而不是img.width
             var cw = this.sourceImg.offsetWidth;
-            this.cw = cw;
-            this.sourceContainer.style.width = cw + 'px';
             var ch = this.sourceImg.offsetHeight;
+            if (cw < this.options.minImgWidth) {
+                // 此时图片宽度比较小
+                ch = Math.round(this.options.minImgWidth / cw * ch);
+                cw = this.options.minImgWidth;
+            }
+            if (ch < this.options.minImgHeight) {
+                // 此时图片高度比较小
+                cw = Math.round(this.options.minImgHeight / ch * cw);
+                ch = this.options.minImgHeight;
+            }
+            this.cw = cw;
             this.ch = ch;
-            this.sourceContainer.style.height = ch + 'px';
+            this.sourceImg.style.width = this.sourceContainer.style.width = cw + 'px';
+            this.sourceImg.style.height = this.sourceContainer.style.height = ch + 'px';
             this.cardMax = {
                 minTop: 0,
                 minLeft: 0,
@@ -541,7 +553,7 @@
         module.exports = ImageCrop;
     } else {
         if (typeof define === 'function' && define.amd) {
-            define('ImageCrop', [], function() { return ImageCrop; });
+            define([], function() { return ImageCrop; });
         }
     }
 })(document);
