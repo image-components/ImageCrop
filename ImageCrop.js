@@ -48,7 +48,6 @@
             var docElem, win,
                 box = {top: 0, left: 0},
                 doc = elem && elem.ownerDocument;
-
             if (!doc) return;
             docElem = doc.documentElement;
             // If we don't have gBCR, just use 0,0 rather than error
@@ -64,19 +63,12 @@
         };
 
     var EVENT = {
-        on: function(ele, name, func, bubble) {
-            return bind(ele, name, func, bubble)
-        },
-
-        off: function(ele, name, func, bubble) {
-            unbind(ele, name, func, bubble)
-        },
-
+        on: bind,
+        off: unbind,
         stop: function(e) {
             e.stopPropagation();
             e.preventDefault();
         }
-
     };
 
     if (!bind.bind) {
@@ -178,16 +170,16 @@
         },
 
         handlerResize: function(e) {
-            var x = e.pageX;
-            var y = e.pageY;
-            var xy = this.target && this.target.getAttribute('data-xy').split(',') || [1, 1];
-            var X = xy[0] - 0;
-            var Y = xy[1] - 0;
-            var diffX = (x - this.startPos.x) * X;
-            var diffY = (y - this.startPos.y) * Y;
+            var x = e.pageX, y = e.pageY, 
+                xy = this.target && this.target.getAttribute('data-xy').split(',') || [1, 1],
+                X = xy[0] - 0, Y = xy[1] - 0,
+                diffX = (x - this.startPos.x) * X, diffY = (y - this.startPos.y) * Y,
+                pW = this.initWH.w, pH = this.initWH.h,
+                pLeft = this.initPos.left, pTop = this.initPos.top,
+                disLeft = false, disTop = false, disW = false, disH = false,
+                eleStyle = this.ele.style, dx, dy;
              if (this.lockWHScale) {
-                var dx = Math.abs(diffX), 
-                    dy = Math.abs(diffY);
+                dx = Math.abs(diffX), dy = Math.abs(diffY);
                 if ((Y > 0 || Y < 0) && X === 0) {
                     diffX = diffY = (diffY >= 0 ? dy : -dy);
                 } else {
@@ -195,22 +187,10 @@
                     diffX = diffY = (diffX >= 0 ? dx : -dx);
                 }
             }
-            var pW = this.initWH.w;
-            var pH = this.initWH.h;
-            var pLeft = this.initPos.left;
-            var pTop = this.initPos.top;
-            var eleStyle = this.ele.style;
             pW += diffX;
             pH += diffY;
-            if (X < 0) {
-                pLeft -= diffX;
-            }
-            if (Y < 0) {
-                pTop -= diffY;
-            }
-
-            var disLeft = false, disTop = false,
-                disW = false, disH = false;
+            if (X < 0) pLeft -= diffX;
+            if (Y < 0) pTop -= diffY;
 
             if (pLeft > (this.Max.w - this.minWidth)) {
                 pW += (pLeft - this.areaMax.maxLeft);
@@ -320,20 +300,16 @@
     }
 
     function initStyles(options) {
-        if (options.preImg) {
-            this.preContainer = options.preImg.parentElement;
-            this.preContainer.style.position = 'relative';
-            this.preContainer.style.overflow = 'hidden';
-            this.preImg = options.preImg;
-            this.preImg.style.position = 'absolute';
-        }
-        if (options.areaImg) {
-            this.areaImgContainer = options.areaImg.parentElement;
-            this.areaImgContainer.style.position = 'relative';
-            this.areaImgContainer.style.overflow = 'hidden';
-            this.areaImg = options.areaImg;
-            this.areaImg.style.position = 'absolute';
-        }
+        if (options.preImg) iStyle.call(this, 'preImg');
+        if (options.areaImg) iStyle.call(this, 'areaImg')
+    }
+
+    function iStyle(c) {
+        var cstyle = (this.[c + 'Container'] = options.preImg.parentElement).style;
+        cstyle.position = 'relative';
+        cstyle.overflow = 'hidden';
+        this[c] = options[c];
+        this[c].style.position = 'absolute';
     }
 
     ImageCrop.prototype = {
@@ -454,10 +430,9 @@
         },
 
         computeScale: function(w, h) {
-            if (this.preContainer) {
-                var scale = this.scale;
-                scale.w = w / this.preContainer.offsetWidth;
-                scale.h = h / this.preContainer.offsetHeight;
+            if (this.preImgContainer) {
+                this.scale.w = w / this.preImgContainer.offsetWidth;
+                this.scale.h = h / this.preImgContainer.offsetHeight;
             }
             this.resize(w, h)
         },
@@ -481,16 +456,15 @@
          * 得到当前裁剪位置
          */
         getPreInfo: function() {
-            var ret;
             if (this.preImg) {
-                ret = {
+                return {
                     top: -parseInt(this.preImg.style.top),
                     left:  -parseInt(this.preImg.style.left),
                     width: this.preImg.width,
                     height: this.preImg.height
-                };
+                }
             }
-            return ret || {};
+            return {}
         },
 
         /*
