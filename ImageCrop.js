@@ -309,6 +309,17 @@
     function ImageCrop(options) {
         this.sourceContainer = options.sourceContainer;
         this.sourceContainer.style.position = 'relative';
+        initStyles.call(this, options);
+        this.options = options;
+        if (!this.options.minHeight) {this.options.minHeight = 20}
+        if (!this.options.minWidth) {this.options.minWidth = 20}
+        if (!this.options.minImgHeight) {this.options.minImgHeight = 150}
+        if (!this.options.minImgWidth) {this.options.minImgWidth = 150}
+        if (typeof this.options.defaultCenter == 'undefined')  this.options.defaultCenter = true;
+        this.initImage();
+    }
+
+    function initStyles(options) {
         if (options.preImg) {
             this.preContainer = options.preImg.parentElement;
             this.preContainer.style.position = 'relative';
@@ -323,13 +334,6 @@
             this.areaImg = options.areaImg;
             this.areaImg.style.position = 'absolute';
         }
-        this.options = options;
-        if (!this.options.minHeight) {this.options.minHeight = 20}
-        if (!this.options.minWidth) {this.options.minWidth = 20}
-        if (!this.options.minImgHeight) {this.options.minImgHeight = 150}
-        if (!this.options.minImgWidth) {this.options.minImgWidth = 150}
-        if (typeof this.options.defaultCenter == 'undefined')  this.options.defaultCenter = true;
-        this.initImage();
     }
 
     ImageCrop.prototype = {
@@ -440,7 +444,7 @@
                 style.top = Math.round(-top) + 'px';
                 style.left = Math.round(-left) + 'px';
             }
-            if (this.options.onMove) this.options.onMove.call(this);
+            if (this.options.onMove) this.options.onMove.call(this, top, left, this.dragMove.pH, this.dragMove.pW);
         },
 
         onResize: function(w, h) {
