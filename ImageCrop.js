@@ -300,12 +300,12 @@
     }
 
     function initStyles(options) {
-        if (options.preImg) iStyle.call(this, 'preImg');
-        if (options.areaImg) iStyle.call(this, 'areaImg')
+        if (options.preImg) iStyle.call(this, 'preImg', options);
+        if (options.areaImg) iStyle.call(this, 'areaImg', options)
     }
 
-    function iStyle(c) {
-        var cstyle = (this.[c + 'Container'] = options.preImg.parentElement).style;
+    function iStyle(c, options) {
+        var cstyle = (this[c + 'Container'] = options[c].parentElement).style;
         cstyle.position = 'relative';
         cstyle.overflow = 'hidden';
         this[c] = options[c];
