@@ -319,7 +319,7 @@
         initImage: function() {
             var that = this;
             if (this.sourceImg) {
-                this.sourceImg.parentNode.removeChild(this.sourceImg);
+                this.sourceImg.parentElement.removeChild(this.sourceImg);
             }
             if (this.card) {
                 this.sourceContainer.removeChild(this.card);
