@@ -319,7 +319,7 @@
         initImage: function() {
             var that = this;
             if (this.sourceImg) {
-                this.sourceImg.parentElement.removeChild(this.sourceImg);
+                this.sourceContainer.removeChild(this.sourceImg);
             }
             if (this.card) {
                 this.sourceContainer.removeChild(this.card);
@@ -347,6 +347,7 @@
         },
 
         init: function() {
+            this.options.onInit && this.options.onInit.call(this);
             // 在ie下 width值是图片默认图片大小
             // 所以这里使用offsetWidth 而不是img.width
             var cw = this.sourceImg.offsetWidth;
