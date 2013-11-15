@@ -273,8 +273,8 @@
             this.initWH.h = this.pH;
             this.initPos.left = this.pLeft;
             this.initPos.top = this.pTop;
-            EVENT.off(DOC, 'mousemove', this._mousemove);
-            EVENT.off(DOC, 'mouseup', this._mouseup);
+            this._mousemove && EVENT.off(DOC, 'mousemove', this._mousemove);
+            this._mouseup && EVENT.off(DOC, 'mouseup', this._mouseup);
             this._mousemove = null;
             this._mouseup = null;
         },
