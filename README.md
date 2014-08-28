@@ -1,9 +1,11 @@
 ImageCrop2
 ==========
 
-<h2>图片裁剪、预览组件</h2>
-<p>参数配置说明：</p>
-<pre>
+##图片裁剪、预览组件
+
+参数配置说明：
+
+```js
 function $(id) {
     return document.getElementById(id)
 }
@@ -34,9 +36,11 @@ var imgCrop = new ImageCrop({
         console.log('originInfo::', this.getOriginInfo())
 	}
 });
-</pre>
-<p>api部分：</p>
-<pre>
+```
+
+api部分：
+
+```js
 var info = imgCrop.getPreInfo(); // 预览图片相关信息
 var info1 = imgCrop.getAreaInfo(); // 移动框所包含的的图片相关信息
 var info2 = imgCrop.getOriginInfo(); // 得到相对于图片原始大小时位置大小信息
@@ -49,8 +53,10 @@ var info2 = imgCrop.getOriginInfo(); // 得到相对于图片原始大小时位�
     height: 200
  }
  */
-这种形式.
+//这种形式.
 imgCrop.changeImage('2.jpg'); // 更改图片
-</pre>
-<p>兼容性：</p>
-<i>IE6+，其他浏览器</i>
+```
+
+兼容性：
+
+_IE6+，其他浏览器_
