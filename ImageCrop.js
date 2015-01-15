@@ -318,12 +318,14 @@
 
 		initImage: function() {
 			var that = this;
-			if (this.sourceImg) {
-				this.sourceContainer.removeChild(this.sourceImg);
-			}
-			if (this.card) {
-				this.sourceContainer.removeChild(this.card);
-			}
+			try {
+				if (this.sourceImg) {
+					this.sourceContainer.removeChild(this.sourceImg);
+				}
+				if (this.card) {
+					this.sourceContainer.removeChild(this.card);
+				}
+			} catch (e) {}
 			this.card = getCard(this.options);
 			this.scale = {w: 1, h: 1};
 			this.sourceImg = new Image();
