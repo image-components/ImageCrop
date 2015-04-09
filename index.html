@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Imagecrop2 by dolymood</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Imagecrop2</h1>
+      <h2 class="project-tagline">轻量级无依赖的图片裁剪、预览组件</h2>
+      <a href="https://github.com/dolymood/ImageCrop2" class="btn">View on GitHub</a>
+      <a href="https://github.com/dolymood/ImageCrop2/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/dolymood/ImageCrop2/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="imagecrop2" class="anchor" href="#imagecrop2" aria-hidden="true"><span class="octicon octicon-link"></span></a>ImageCrop2</h1>
+
+<p><a href="https://rawgit.com/dolymood/ImageCrop2/master/index.html">DEMO</a></p>
+
+<h4>
+<a id="imagecrop2--一个轻量级无依赖的图片裁剪预览组件" class="anchor" href="#imagecrop2--%E4%B8%80%E4%B8%AA%E8%BD%BB%E9%87%8F%E7%BA%A7%E6%97%A0%E4%BE%9D%E8%B5%96%E7%9A%84%E5%9B%BE%E7%89%87%E8%A3%81%E5%89%AA%E9%A2%84%E8%A7%88%E7%BB%84%E4%BB%B6" aria-hidden="true"><span class="octicon octicon-link"></span></a>ImageCrop2 —— 一个轻量级无依赖的图片裁剪、预览组件。</h4>
+
+<p>配置说明：</p>
+
+<div class="highlight highlight-js"><pre><span class="pl-k">function</span> <span class="pl-en">$</span>(<span class="pl-smi">id</span>) {
+    <span class="pl-k">return</span> <span class="pl-c1">document</span>.<span class="pl-c1">getElementById</span>(id)
+}
+<span class="pl-k">var</span> imgCrop <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">ImageCrop</span>({
+    sourceContainer<span class="pl-k">:</span> $(<span class="pl-s"><span class="pl-pds">'</span>source<span class="pl-pds">'</span></span>), <span class="pl-c">// 必选，图片所在的容器元素</span>
+    src<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>1.jpg<span class="pl-pds">'</span></span>, <span class="pl-c">// 必选，图片地址</span>
+    imgCls<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>img maxImg<span class="pl-pds">'</span></span>, <span class="pl-c">// 可选，图片元素img的classname，默认 img</span>
+    preImg<span class="pl-k">:</span> $(<span class="pl-s"><span class="pl-pds">'</span>prevImg<span class="pl-pds">'</span></span>), <span class="pl-c">// 可选，预览图片元素，已存在img元素</span>
+    areaImg<span class="pl-k">:</span> $(<span class="pl-s"><span class="pl-pds">'</span>areaImg<span class="pl-pds">'</span></span>), <span class="pl-c">// 可选，当前移动框所包含的图片内容</span>
+    width<span class="pl-k">:</span> <span class="pl-c1">50</span>, <span class="pl-c">// 可选，默认移动框的宽度，默认 100</span>
+    height<span class="pl-k">:</span> <span class="pl-c1">50</span>, <span class="pl-c">// 可选，默认移动框的高度，默认 100</span>
+    lockWHScale<span class="pl-k">:</span> <span class="pl-c1">true</span>, <span class="pl-c">// 可选，是否锁定宽高比，默认false</span>
+    defaultCenter<span class="pl-k">:</span> <span class="pl-c1">false</span>, <span class="pl-c">// 可选，是否默认出现在中心位置，默认true</span>
+    top<span class="pl-k">:</span> <span class="pl-c1">10</span>, <span class="pl-c">// 可选，默认出现位置的top值（当defaultCenter为false时有效），默认0</span>
+    left<span class="pl-k">:</span><span class="pl-c1">10</span>, <span class="pl-c">// 可选，默认出现位置的left值（当defaultCenter为false时有效），默认0</span>
+
+    minHeight<span class="pl-k">:</span> <span class="pl-c1">10</span>, <span class="pl-c">// 可选，移动框的最小高度，默认20</span>
+    minWidth<span class="pl-k">:</span> <span class="pl-c1">10</span>, <span class="pl-c">// 可选，移动框的最小宽度，默认20</span>
+
+    minImgWidth<span class="pl-k">:</span> <span class="pl-c1">120</span>, <span class="pl-c">// 可选，预览图片的最小宽度，默认150</span>
+    minImgHeight<span class="pl-k">:</span> <span class="pl-c1">120</span>, <span class="pl-c">// 可选，预览图片的最小高度，默认150</span>
+
+    <span class="pl-c">// 可选，当移动的时候调用</span>
+    <span class="pl-c">// 移动的概念是指 选择框的大小、位置 发生改变的时候</span>
+    <span class="pl-en">onMove</span>: <span class="pl-k">function</span>() {
+        <span class="pl-en">console</span><span class="pl-c1">.log</span>(<span class="pl-s"><span class="pl-pds">'</span>preInfo::<span class="pl-pds">'</span></span>, <span class="pl-v">this</span>.getPreInfo())
+        <span class="pl-en">console</span><span class="pl-c1">.log</span>(<span class="pl-s"><span class="pl-pds">'</span>areaInfo::<span class="pl-pds">'</span></span>, <span class="pl-v">this</span>.getAreaInfo())
+        <span class="pl-en">console</span><span class="pl-c1">.log</span>(<span class="pl-s"><span class="pl-pds">'</span>originInfo::<span class="pl-pds">'</span></span>, <span class="pl-v">this</span>.getOriginInfo())
+    }
+});</pre></div>
+
+<p>api部分：</p>
+
+<div class="highlight highlight-js"><pre><span class="pl-k">var</span> info <span class="pl-k">=</span> imgCrop.getPreInfo(); <span class="pl-c">// 预览图片相关信息</span>
+<span class="pl-k">var</span> info1 <span class="pl-k">=</span> imgCrop.getAreaInfo(); <span class="pl-c">// 移动框所包含的的图片相关信息</span>
+<span class="pl-k">var</span> info2 <span class="pl-k">=</span> imgCrop.getOriginInfo(); <span class="pl-c">// 得到相对于图片原始大小时位置大小信息</span>
+<span class="pl-c">// info info1 info2 均为</span>
+<span class="pl-c">/*</span>
+<span class="pl-c"> {</span>
+<span class="pl-c">    left: 10,</span>
+<span class="pl-c">    top: 10,</span>
+<span class="pl-c">    width: 200,</span>
+<span class="pl-c">    height: 200</span>
+<span class="pl-c"> }</span>
+<span class="pl-c"> */</span>
+<span class="pl-c">//这种形式.</span>
+imgCrop.changeImage(<span class="pl-s"><span class="pl-pds">'</span>2.jpg<span class="pl-pds">'</span></span>); <span class="pl-c">// 更改图片</span></pre></div>
+
+<p>兼容性：</p>
+
+<p><em>IE6+，其他浏览器</em></p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/dolymood/ImageCrop2">Imagecrop2</a> is maintained by <a href="https://github.com/dolymood">dolymood</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
+
