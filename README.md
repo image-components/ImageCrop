@@ -1,6 +1,8 @@
 ImageCrop2
 ==========
 
+[DEMO](https://rawgit.com/dolymood/ImageCrop2/master/index.html)
+
 ##图片裁剪、预览组件
 
 参数配置说明：
