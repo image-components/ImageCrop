@@ -3,9 +3,9 @@ ImageCrop2
 
 [DEMO](https://rawgit.com/dolymood/ImageCrop2/master/index.html)
 
-##图片裁剪、预览组件
+ImageCrop2 —— 一个轻量级无依赖的图片裁剪、预览组件。
 
-参数配置说明：
+配置说明：
 
 ```js
 function $(id) {
