@@ -5,7 +5,7 @@ ImageCrop2
 
 ImageCrop2 —— 一个轻量级无依赖的图片裁剪、预览组件。
 
-__针对于手机端特性，模仿 QQ 上传头像的裁切，增加了适用于手机端的图片裁切组件  [ImageCrop4Mobile](https://github.com/dolymood/ImageCrop4Mobile) __
+__ 针对于手机端特性，模仿 QQ 上传头像的裁切，增加了适用于手机端的图片裁切组件  [ImageCrop4Mobile](https://github.com/dolymood/ImageCrop4Mobile) __
 
 配置说明：
 
